@@ -147,9 +147,12 @@
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
+  /<script src="/uv/uv.bundle.js"></script>
+<script src="/uv/uv.config.js"></script>
+<script>
   // 1. CLOAK & THEME LOGIC
   const cloaks = {
-    none: { t: "Mars", i: "https://google.com" },
+    none: { t: "Mars", i: "favicon.ico" },
     drive: { t: "My Drive - Google Drive", i: "https://gstatic.com" },
     classroom: { t: "Classes", i: "https://gstatic.com" },
     gmail: { t: "Gmail", i: "https://gstatic.com" }
@@ -158,83 +161,87 @@
   function setCloak(type) {
     const cloak = cloaks[type];
     document.title = cloak.t;
-    document.querySelectorAll('.cloak-opt').forEach(opt => opt.querySelector('span:last-child').innerText = "SELECT");
-    const selected = document.querySelector(`.cloak-opt[data-type="${type}"]`);
-    if(selected) selected.querySelector('span:last-child').innerText = "ACTIVE";
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = cloak.i;
     localStorage.setItem('mars-cloak', type);
   }
 
   function setTheme(theme) {
-    const bodies = {
+    const gradients = {
       sunset: 'linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500)',
       midnight: 'linear-gradient(-45deg, #000000, #1a1a2e, #16213e, #0f3460)',
       nebula: 'linear-gradient(-45deg, #020111, #3a1c71, #d76d77, #ffaf7b)',
       glacier: 'linear-gradient(-45deg, #203a43, #2c5364, #0f2027)'
     };
-    document.body.style.background = bodies[theme];
+    document.body.style.background = gradients[theme];
+    document.body.style.backgroundSize = "400% 400%";
     localStorage.setItem('mars-theme', theme);
   }
 
-  // 2. DRAG LOGIC FOR HOME BUTTON
-  const dragItem = document.querySelector("#home-button");
-  let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+  // 2. PROXY LOGIC (Ultraviolet)
+  const form = document.getElementById('uv-form');
+  const address = document.getElementById('uv-address');
 
-  dragItem.addEventListener("touchstart", dragStart, false);
-  dragItem.addEventListener("touchend", dragEnd, false);
-  dragItem.addEventListener("touchmove", drag, false);
-  dragItem.addEventListener("mousedown", dragStart, false);
-  dragItem.addEventListener("mouseup", dragEnd, false);
-  dragItem.addEventListener("mousemove", drag, false);
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    proxy(address.value);
+  });
 
-  function dragStart(e) {
-    initialX = (e.type === "touchstart" ? e.touches[0].clientX : e.clientX) - xOffset;
-    initialY = (e.type === "touchstart" ? e.touches[0].clientY : e.clientY) - yOffset;
-    if (e.target === dragItem || dragItem.contains(e.target)) active = true;
+  function proxy(url) {
+    window.navigator.serviceWorker.register('/uv/sw.js', {
+      scope: __uv$config.prefix
+    }).then(() => {
+      let target = url.trim();
+      if (!target.includes('.') || target.includes(' ')) {
+        target = `https://google.com{encodeURIComponent(target)}`;
+      } else if (!target.startsWith('http')) {
+        target = `https://${target}`;
+      }
+      window.location.href = __uv$config.prefix + __uv$config.encodeUrl(target);
+    });
   }
 
-  function dragEnd(e) {
-    initialX = currentX; initialY = currentY; active = false;
-    // If it wasn't dragged much, treat as a click
-    if (Math.abs(xOffset) < 5 && Math.abs(yOffset) < 5) location.reload();
-  }
-
-  function drag(e) {
-    if (active) {
-      e.preventDefault();
-      currentX = (e.type === "touchmove" ? e.touches[0].clientX : e.clientX) - initialX;
-      currentY = (e.type === "touchmove" ? e.touches[0].clientY : e.clientY) - initialY;
-      xOffset = currentX; yOffset = currentY;
-      dragItem.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-    }
-  }
-
-  // 3. CORE FUNCTIONS
+  // 3. UI EXTRAS
   function toggleSettings() {
-    const s = document.getElementById('settings-overlay');
-    s.style.display = s.style.display === 'flex' ? 'none' : 'flex';
+    const overlay = document.getElementById('settings-overlay');
+    overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
   }
 
   function updateClock() {
-    document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+    const now = new Date();
+    document.getElementById('clock').innerText = now.toLocaleTimeString();
   }
   setInterval(updateClock, 1000);
+  updateClock();
 
-  window.onload = () => {
-    setCloak(localStorage.getItem('mars-cloak') || 'none');
-    setTheme(localStorage.getItem('mars-theme') || 'sunset');
-    updateClock();
+  // 4. DRAGGABLE BUTTON
+  const btn = document.getElementById('home-button');
+  let isDragging = false;
+  btn.addEventListener('mousedown', () => isDragging = false);
+  btn.addEventListener('mousemove', () => isDragging = true);
+  btn.addEventListener('mouseup', () => {
+    if (!isDragging) window.location.href = '/';
+  });
+  
+  // Drag logic for mobile/touch
+  btn.onpointermove = (e) => {
+    if (e.pressure > 0) {
+      btn.style.left = `${e.clientX - 25}px`;
+      btn.style.top = `${e.clientY - 25}px`;
+      btn.style.bottom = 'auto';
+    }
   };
 
-  function proxy(url) {
-    if (!url.includes('.') || url.includes(' ')) {
-      url = 'https://google.com' + encodeURIComponent(url);
-    } else if (!(url.startsWith('https://') || url.startsWith('http://'))) {
-      url = 'https://' + url;
-    }
-    window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
-  }
+  // Load saved settings
+  if (localStorage.getItem('mars-theme')) setTheme(localStorage.getItem('mars-theme'));
+  if (localStorage.getItem('mars-cloak')) setCloak(localStorage.getItem('mars-cloak'));
+</script>
 
-  window.addEventListener('keydown', e => { if (e.key === '`') window.location.href = 'https://google.com'; });
 </script>
 </body>
 </html>
