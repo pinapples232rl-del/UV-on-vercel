@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>Mars</title>
-  <link rel="icon" type="image/png" href="https://icons8.com">
   <style>
     @import url('https://googleapis.com');
 
@@ -12,7 +11,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: 'Plus Jakarta Sans', sans-serif; /* Smoother, modern font */
+      font-family: 'Plus Jakarta Sans', sans-serif;
       background: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500);
       background-size: 400% 400%;
       animation: sunset-move 12s ease infinite;
@@ -30,7 +29,6 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      z-index: 2;
     }
 
     .glass-panel {
@@ -38,7 +36,7 @@
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 35px; /* Rounder edges for less 'blocky' feel */
+      border-radius: 40px;
       padding: 60px 40px;
       width: 90%;
       max-width: 600px;
@@ -52,10 +50,8 @@
       letter-spacing: 12px;
       font-weight: 300;
       color: white;
-      opacity: 0.9;
     }
 
-    /* Smooth Search Bar */
     input {
       width: 100%;
       padding: 20px;
@@ -67,7 +63,7 @@
       outline: none;
       box-sizing: border-box;
       text-align: center;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.4s ease;
     }
 
     input:focus {
@@ -76,16 +72,11 @@
       transform: scale(1.02);
     }
 
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.4);
-      letter-spacing: 1px;
-    }
-
-    /* Bookmark Styles */
+    /* Bookmarks section */
     .bookmarks {
       display: flex;
       justify-content: center;
-      gap: 25px;
+      gap: 30px;
       margin-top: 40px;
     }
 
@@ -94,21 +85,20 @@
       flex-direction: column;
       align-items: center;
       text-decoration: none;
-      transition: all 0.3s ease;
       cursor: pointer;
+      transition: 0.3s;
     }
 
-    .bookmark-item img {
-      width: 45px;
-      height: 45px;
+    /* Icon styling */
+    .icon {
+      font-size: 32px; /* Using Emojis as icons since they are unblockable */
       margin-bottom: 8px;
-      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
       transition: transform 0.3s ease;
     }
 
     .bookmark-item span {
       color: rgba(255, 255, 255, 0.7);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 500;
       letter-spacing: 1px;
     }
@@ -117,14 +107,9 @@
       transform: translateY(-8px);
     }
 
-    .bookmark-item:hover img {
-      transform: scale(1.1);
-    }
-
     .bookmark-item:hover span {
       color: white;
     }
-
   </style>
 </head>
 <body>
@@ -137,40 +122,34 @@
         <input id="uv-address" type="text" placeholder="Where to next..." autocomplete="off">
       </form>
 
-                      <div class="bookmarks" style="display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
-        
-        <!-- GAMES -->
-        <div class="bookmark-item" onclick="proxy('https://gn-math.dev')" style="cursor: pointer; text-align: center;">
-          <img src="https://icons8.com" style="width: 40px; display: block; margin: 0 auto 5px;">
-          <span style="font-size: 10px; color: white; opacity: 0.8;">GAMES</span>
+      <div class="bookmarks">
+        <div class="bookmark-item" onclick="proxy('https://gn-math.dev')">
+          <div class="icon">🎮</div>
+          <span>GAMES</span>
         </div>
 
-        <!-- MOVIES -->
-        <div class="bookmark-item" onclick="proxy('https://dorawatch.org')" style="cursor: pointer; text-align: center;">
-          <img src="https://icons8.com" style="width: 40px; display: block; margin: 0 auto 5px;">
-          <span style="font-size: 10px; color: white; opacity: 0.8;">MOVIES</span>
+        <div class="bookmark-item" onclick="proxy('https://dorawatch.org')">
+          <div class="icon">🎬</div>
+          <span>MOVIES</span>
         </div>
 
-        <!-- MUSIC -->
-        <div class="bookmark-item" onclick="proxy('https://monochrome.tf')" style="cursor: pointer; text-align: center;">
-          <img src="https://icons8.com" style="width: 40px; display: block; margin: 0 auto 5px;">
-          <span style="font-size: 10px; color: white; opacity: 0.8;">MUSIC</span>
+        <div class="bookmark-item" onclick="proxy('https://monochrome.tf')">
+          <div class="icon">🎵</div>
+          <span>MUSIC</span>
         </div>
 
-        <!-- GOOGLE -->
-        <div class="bookmark-item" onclick="proxy('https://google.com')" style="cursor: pointer; text-align: center;">
-          <img src="https://icons8.com" style="width: 40px; display: block; margin: 0 auto 5px;">
-          <span style="font-size: 10px; color: white; opacity: 0.8;">GOOGLE</span>
+        <div class="bookmark-item" onclick="proxy('https://google.com')">
+          <div class="icon">🔍</div>
+          <span>GOOGLE</span>
         </div>
 
-        <!-- YOUTUBE -->
-        <div class="bookmark-item" onclick="proxy('https://youtube.com')" style="cursor: pointer; text-align: center;">
-          <img src="https://icons8.com" style="width: 40px; display: block; margin: 0 auto 5px;">
-          <span style="font-size: 10px; color: white; opacity: 0.8;">YOUTUBE</span>
+        <div class="bookmark-item" onclick="proxy('https://youtube.com')">
+          <div class="icon">📺</div>
+          <span>YOUTUBE</span>
         </div>
-
       </div>
-
+    </div>
+  </div>
 
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
@@ -178,12 +157,9 @@
   const form = document.getElementById('uv-form');
   const input = document.getElementById('uv-address');
 
-  // Unified Proxy Function
   async function proxy(url) {
     if (typeof __uv$config === 'undefined') return;
-    window.navigator.serviceWorker.register('/uv/sw.js', {
-      scope: __uv$config.prefix
-    }).then(() => {
+    window.navigator.serviceWorker.register('/uv/sw.js', { scope: __uv$config.prefix }).then(() => {
       if (!isUrl(url)) url = 'https://google.com' + encodeURIComponent(url);
       else if (!(url.startsWith('https://') || url.startsWith('http://'))) url = 'http://' + url;
       window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
@@ -200,7 +176,6 @@
     return false;
   };
 
-  // Panic Switch
   document.addEventListener('keydown', (e) => {
     if (e.key === "Escape") window.location.href = "https://google.com";
   });
