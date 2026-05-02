@@ -23,6 +23,48 @@
       100% { background-position: 0% 50%; }
     }
 
+    /* Top Bar Elements */
+    .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      z-index: 10;
+    }
+
+    #clock {
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      background: rgba(0,0,0,0.2);
+      padding: 10px 20px;
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+    }
+
+    .settings-btn {
+      cursor: pointer;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-btn:hover {
+      background: rgba(255,255,255,0.1);
+      transform: rotate(45deg);
+    }
+
+    /* Main UI */
     .container {
       display: flex;
       flex-direction: column;
@@ -72,7 +114,6 @@
       transform: scale(1.02);
     }
 
-    /* Bookmarks section */
     .bookmarks {
       display: flex;
       justify-content: center;
@@ -89,11 +130,9 @@
       transition: 0.3s;
     }
 
-    /* Icon styling */
     .icon {
-      font-size: 32px; /* Using Emojis as icons since they are unblockable */
+      font-size: 32px;
       margin-bottom: 8px;
-      transition: transform 0.3s ease;
     }
 
     .bookmark-item span {
@@ -106,13 +145,16 @@
     .bookmark-item:hover {
       transform: translateY(-8px);
     }
-
-    .bookmark-item:hover span {
-      color: white;
-    }
   </style>
 </head>
 <body>
+
+  <div class="top-bar">
+    <div id="clock">00:00:00</div>
+    <div class="settings-btn" onclick="alert('Settings Panel coming soon!')">
+      <div class="icon" style="font-size: 24px; margin: 0;">⚙️</div>
+    </div>
+  </div>
 
   <div class="container">
     <div class="glass-panel">
@@ -127,22 +169,18 @@
           <div class="icon">🎮</div>
           <span>GAMES</span>
         </div>
-
         <div class="bookmark-item" onclick="proxy('https://dorawatch.org')">
           <div class="icon">🎬</div>
           <span>MOVIES</span>
         </div>
-
         <div class="bookmark-item" onclick="proxy('https://monochrome.tf')">
           <div class="icon">🎵</div>
           <span>MUSIC</span>
         </div>
-
         <div class="bookmark-item" onclick="proxy('https://google.com')">
           <div class="icon">🔍</div>
           <span>GOOGLE</span>
         </div>
-
         <div class="bookmark-item" onclick="proxy('https://youtube.com')">
           <div class="icon">📺</div>
           <span>YOUTUBE</span>
@@ -154,6 +192,15 @@
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
+  // Clock Function
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // Proxy Logic
   const form = document.getElementById('uv-form');
   const input = document.getElementById('uv-address');
 
