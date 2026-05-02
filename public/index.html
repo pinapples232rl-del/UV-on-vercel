@@ -30,17 +30,15 @@
       display: flex; justify-content: space-between; align-items: center; z-index: 10;
     }
 
-    /* Draggable Home Button Styling */
     #home-button {
       position: fixed; bottom: 25px; left: 25px; z-index: 9999;
       cursor: grab; background: rgba(0,0,0,0.4); padding: 15px; 
-      border-radius: 50%; backdrop-filter: blur(15px); transition: transform 0.2s, background 0.3s;
+      border-radius: 50%; backdrop-filter: blur(15px); transition: background 0.3s;
       display: flex; align-items: center; justify-content: center;
       border: 1px solid rgba(255, 255, 255, 0.2); touch-action: none;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3); user-select: none;
     }
-    #home-button:active { cursor: grabbing; transform: scale(0.9); }
-    #home-button:hover { background: rgba(255,255,255,0.1); }
+    #home-button:active { cursor: grabbing; }
 
     #clock {
       font-size: 0.9rem; color: white; background: rgba(0,0,0,0.3); 
@@ -120,7 +118,6 @@
     <div class="icon-btn" onclick="toggleSettings()">⚙️</div>
   </div>
 
-  <!-- Draggable Home Button -->
   <div id="home-button">
     <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -147,12 +144,9 @@
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
-  /<script src="/uv/uv.bundle.js"></script>
-<script src="/uv/uv.config.js"></script>
-<script>
   // 1. CLOAK & THEME LOGIC
   const cloaks = {
-    none: { t: "Mars", i: "favicon.ico" },
+    none: { t: "Mars", i: "" },
     drive: { t: "My Drive - Google Drive", i: "https://gstatic.com" },
     classroom: { t: "Classes", i: "https://gstatic.com" },
     gmail: { t: "Gmail", i: "https://gstatic.com" }
@@ -172,18 +166,18 @@
   }
 
   function setTheme(theme) {
-    const gradients = {
+    const bodies = {
       sunset: 'linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500)',
       midnight: 'linear-gradient(-45deg, #000000, #1a1a2e, #16213e, #0f3460)',
       nebula: 'linear-gradient(-45deg, #020111, #3a1c71, #d76d77, #ffaf7b)',
       glacier: 'linear-gradient(-45deg, #203a43, #2c5364, #0f2027)'
     };
-    document.body.style.background = gradients[theme];
+    document.body.style.background = bodies[theme];
     document.body.style.backgroundSize = "400% 400%";
     localStorage.setItem('mars-theme', theme);
   }
 
-  // 2. PROXY LOGIC (Ultraviolet)
+  // 2. PROXY LOGIC
   const form = document.getElementById('uv-form');
   const address = document.getElementById('uv-address');
 
@@ -219,29 +213,34 @@
   setInterval(updateClock, 1000);
   updateClock();
 
-  // 4. DRAGGABLE BUTTON
+  // 4. DRAGGABLE HOME BUTTON
   const btn = document.getElementById('home-button');
   let isDragging = false;
-  btn.addEventListener('mousedown', () => isDragging = false);
-  btn.addEventListener('mousemove', () => isDragging = true);
-  btn.addEventListener('mouseup', () => {
-    if (!isDragging) window.location.href = '/';
-  });
-  
-  // Drag logic for mobile/touch
-  btn.onpointermove = (e) => {
-    if (e.pressure > 0) {
-      btn.style.left = `${e.clientX - 25}px`;
-      btn.style.top = `${e.clientY - 25}px`;
+  let startX, startY;
+
+  btn.onpointerdown = (e) => {
+    isDragging = false;
+    startX = e.clientX - btn.getBoundingClientRect().left;
+    startY = e.clientY - btn.getBoundingClientRect().top;
+    btn.setPointerCapture(e.pointerId);
+
+    btn.onpointermove = (ev) => {
+      isDragging = true;
+      btn.style.left = (ev.clientX - startX) + 'px';
+      btn.style.top = (ev.clientY - startY) + 'px';
       btn.style.bottom = 'auto';
-    }
+    };
+
+    btn.onpointerup = (ev) => {
+      btn.onpointermove = null;
+      btn.onpointerup = null;
+      if (!isDragging) window.location.href = '/';
+    };
   };
 
-  // Load saved settings
+  // Load Saved
   if (localStorage.getItem('mars-theme')) setTheme(localStorage.getItem('mars-theme'));
   if (localStorage.getItem('mars-cloak')) setCloak(localStorage.getItem('mars-cloak'));
-</script>
-
 </script>
 </body>
 </html>
