@@ -5,12 +5,25 @@
   <title>Mars</title>
   <style>
     @import url('https://googleapis.com');
-    :root { --bg: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500); --accent: #ff8c00; }
     
-    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; background: #000; transition: 0.5s ease; }
+    :root { 
+      --bg-gradient: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500); 
+      --accent: #ff8c00; 
+    }
     
-    /* RESTORED: Animated Background Layer */
-    .bg-layer { position: fixed; inset: 0; background: var(--bg); background-size: 400% 400%; animation: sunset 15s ease infinite; z-index: -1; transition: opacity 0.8s ease; }
+    /* FIX: Background is now applied to HTML to ensure visibility */
+    html {
+      background: var(--bg-gradient);
+      background-size: 400% 400%;
+      animation: sunset 15s ease infinite;
+    }
+
+    body { 
+      margin: 0; padding: 0; width: 100%; height: 100vh; overflow: hidden; 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      background-size: cover; background-position: center; transition: 0.5s;
+    }
+    
     @keyframes sunset { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
     /* UI Elements */
@@ -20,22 +33,20 @@
 
     #home-button { position: fixed; bottom: 25px; left: 25px; z-index: 10000; cursor: grab; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 50%; backdrop-filter: blur(15px); display: flex; border: 1px solid rgba(255, 255, 255, 0.2); touch-action: none; user-select: none; }
 
-    /* Main Container */
     .container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
     .glass-panel { background: rgba(0,0,0,0.25); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; padding: 60px 40px; width: 500px; text-align: center; }
     h1 { font-size: 3.5rem; margin: 0 0 40px 0; letter-spacing: 15px; font-weight: 300; color: white; }
     input { width: 100%; max-width: 400px; padding: 18px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.1); color: white; font-size: 1rem; outline: none; text-align: center; }
 
-    /* Bookmarks */
     .bookmarks { display: flex; justify-content: center; gap: 25px; margin-top: 40px; }
     .bookmark-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; }
     .bookmark-item:hover { transform: translateY(-8px); }
     .bookmark-icon { width: 55px; height: 55px; border-radius: 14px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.15); }
     .bookmark-item span { font-size: 0.6rem; color: white; font-weight: 800; letter-spacing: 1px; opacity: 0.7; }
 
-    /* Settings */
+    /* Settings Overlay */
     #settings-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); display: none; justify-content: center; align-items: center; z-index: 10001; }
-    .settings-content { background: rgba(255,255,255,0.05); padding: 35px; border-radius: 30px; width: 400px; color: white; border: 1px solid rgba(255,255,255,0.1); }
+    .settings-content { background: rgba(255,255,255,0.05); padding: 35px; border-radius: 30px; width: 400px; color: white; border: 1px solid rgba(255,255,255,0.1); max-height: 85vh; overflow-y: auto; }
     .section-label { font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px; margin: 20px 0 10px 0; font-weight: 800; color: var(--accent); }
     .option { background: rgba(255,255,255,0.05); padding: 12px 18px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
     .option:hover { background: rgba(255,255,255,0.1); }
@@ -44,15 +55,15 @@
 </head>
 <body>
 
-  <!-- Animated Sunset Background restores here -->
-  <div class="bg-layer" id="main-bg"></div>
-
   <div id="settings-overlay">
     <div class="settings-content">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
         <h2 style="font-weight:300; margin:0;">System Config</h2>
         <span onclick="toggleSettings()" style="cursor:pointer; font-size:2rem;">&times;</span>
       </div>
+
+      <div class="section-label">STEALTH MODE</div>
+      <div class="option" onclick="aboutBlank()"><span>Open in About:Blank</span><span>🚀</span></div>
 
       <div class="section-label">SEARCH ENGINE</div>
       <div class="option" onclick="setEngine('google')"><span>Google</span><span id="check-google"></span></div>
@@ -114,26 +125,39 @@
   function setEngine(e) {
     engine = e; localStorage.setItem('mars-engine', e);
     document.querySelectorAll('[id^="check-"]').forEach(el => el.innerText = '');
-    document.getElementById('check-' + e).innerText = '●';
+    const check = document.getElementById('check-' + e);
+    if(check) check.innerText = '●';
   }
   setEngine(engine);
+
+  function aboutBlank() {
+    const win = window.open();
+    const url = window.location.href;
+    const style = win.document.createElement('style');
+    style.innerHTML = `html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; } iframe { width: 100%; height: 100%; border: none; }`;
+    win.document.head.appendChild(style);
+    const iframe = win.document.createElement('iframe');
+    iframe.src = url;
+    win.document.body.appendChild(iframe);
+    window.location.replace('https://google.com'); // Leaves the current tab safe
+  }
 
   function setCustomBg(url) {
     if(!url) {
       document.body.style.backgroundImage = 'none';
-      document.getElementById('main-bg').style.opacity = '1';
       localStorage.removeItem('mars-bg');
       return;
     }
     document.body.style.backgroundImage = `url('${url}')`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.getElementById('main-bg').style.opacity = '0';
     localStorage.setItem('mars-bg', url);
   }
 
   function setCloak(type) {
-    const map = { none: ["Mars", ""], drive: ["My Drive - Google Drive", "https://gstatic.com"], classroom: ["Classes", "https://gstatic.com"] };
+    const map = { 
+      none: ["Mars", ""], 
+      drive: ["My Drive - Google Drive", "https://gstatic.com"], 
+      classroom: ["Classes", "https://gstatic.com"] 
+    };
     document.title = map[type][0];
     let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
     link.rel = 'icon'; link.href = map[type][1];
