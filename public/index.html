@@ -30,10 +30,17 @@
       display: flex; justify-content: space-between; align-items: center; z-index: 10;
     }
 
-    /* Fixed Bottom Left Home Button */
-    .home-anchor {
-      position: fixed; bottom: 25px; left: 25px; z-index: 20;
+    /* Draggable Home Button Styling */
+    #home-button {
+      position: fixed; bottom: 25px; left: 25px; z-index: 9999;
+      cursor: grab; background: rgba(0,0,0,0.4); padding: 15px; 
+      border-radius: 50%; backdrop-filter: blur(15px); transition: transform 0.2s, background 0.3s;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.2); touch-action: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
+    #home-button:active { cursor: grabbing; transform: scale(0.9); }
+    #home-button:hover { background: rgba(255,255,255,0.1); }
 
     #clock {
       font-size: 0.9rem; color: white; background: rgba(0,0,0,0.3); 
@@ -46,12 +53,11 @@
       display: flex; align-items: center; justify-content: center;
       border: 1px solid rgba(255, 255, 255, 0.1); outline: none;
     }
-    .icon-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.1); }
 
     .container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
     
     .glass-panel {
-      background: rgba(0,0,0,0.3); backdrop-filter: blur(25px);
+      background: rgba(0,0,0,0.2); backdrop-filter: blur(25px);
       border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px;
       padding: 60px 40px; width: 500px; text-align: center;
     }
@@ -65,13 +71,9 @@
     }
 
     .bookmarks { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 40px; width: 100%; }
-    
-    .bookmark-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; height: 80px; }
+    .bookmark-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; }
     .bookmark-item:hover { transform: translateY(-5px); }
     .bookmark-item span { font-size: 0.6rem; margin-top: 10px; color: white; opacity: 0.7; font-weight: 600; letter-spacing: 1px; }
-
-    .svg-icon { width: 28px; height: 28px; }
-    .emoji-icon { font-size: 28px; line-height: 1; }
 
     #settings-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -83,24 +85,18 @@
       width: 450px; max-height: 80vh; overflow-y: auto; color: white; border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-    
     .section-label { font-size: 0.7rem; opacity: 0.4; letter-spacing: 2px; margin: 25px 0 10px 0; font-weight: 800; color: var(--accent); }
-    
     .option { 
       background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 12px; 
       margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;
     }
-    .option:hover { background: rgba(255,255,255,0.1); }
-    .option span:last-child { font-size: 0.7rem; opacity: 0.6; font-weight: 800; }
   </style>
 </head>
 <body>
 
-  <!-- Settings Overlay -->
   <div id="settings-overlay">
     <div class="settings-content">
-      <div class="settings-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
         <h2 style="margin:0; font-weight:300;">System Config</h2>
         <span onclick="toggleSettings()" style="cursor:pointer; font-size:1.5rem;">&times;</span>
       </div>
@@ -116,29 +112,22 @@
       <div class="option" onclick="setTheme('midnight')"><span>Midnight Void</span><span>SELECT</span></div>
       <div class="option" onclick="setTheme('nebula')"><span>Purple Nebula</span><span>SELECT</span></div>
       <div class="option" onclick="setTheme('glacier')"><span>Arctic Glacier</span><span>SELECT</span></div>
-
-      <div class="section-label">PRIVACY</div>
-      <div class="option"><span>Panic Key</span><span>` (BACKTICK)</span></div>
-      <div class="option" onclick="alert('Credits: Built for Mars OS\nEngine: Ultraviolet')"><span>Credits</span><span>VIEW</span></div>
     </div>
   </div>
 
-  <!-- UI Navigation -->
   <div class="top-bar">
     <div id="clock">00:00:00</div>
     <div class="icon-btn" onclick="toggleSettings()">⚙️</div>
   </div>
 
-  <div class="home-anchor">
-    <div class="icon-btn" onclick="location.reload()">
-      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-      </svg>
-    </div>
+  <!-- Draggable Home Button -->
+  <div id="home-button">
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
   </div>
 
-  <!-- Main UI -->
   <div class="container">
     <div class="glass-panel">
       <h1>MARS</h1>
@@ -146,17 +135,11 @@
         <input id="uv-address" type="text" placeholder="Where to next..." autocomplete="off">
       </form>
       <div class="bookmarks">
-        <div class="bookmark-item" onclick="proxy('https://gn-math.dev')"><div class="emoji-icon">🎮</div><span>GAMES</span></div>
-        <div class="bookmark-item" onclick="proxy('https://dorawatch.org')"><div class="emoji-icon">🎬</div><span>MOVIES</span></div>
-        <div class="bookmark-item" onclick="proxy('https://monochrome.tf')"><div class="emoji-icon">🎵</div><span>MUSIC</span></div>
-        <div class="bookmark-item" onclick="proxy('https://google.com')">
-          <svg class="svg-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          <span>GOOGLE</span>
-        </div>
-        <div class="bookmark-item" onclick="proxy('https://youtube.com')">
-          <svg class="svg-icon" viewBox="0 0 24 24"><path fill="#FF0000" d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.9.5 9.3.5 9.3.5s7.4 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"/><path fill="#FFF" d="M9.5 15.5l6.3-3.5-6.3-3.5z"/></svg>
-          <span>YOUTUBE</span>
-        </div>
+        <div class="bookmark-item" onclick="proxy('https://google.com')"><span style="font-size:20px">🔍</span><span>SEARCH</span></div>
+        <div class="bookmark-item" onclick="proxy('https://youtube.com')"><span style="font-size:20px">📺</span><span>VIDEO</span></div>
+        <div class="bookmark-item" onclick="proxy('https://discord.com')"><span style="font-size:20px">💬</span><span>CHAT</span></div>
+        <div class="bookmark-item" onclick="proxy('https://reddit.com')"><span style="font-size:20px">🤖</span><span>FORUM</span></div>
+        <div class="bookmark-item" onclick="proxy('https://github.com')"><span style="font-size:20px">💻</span><span>CODE</span></div>
       </div>
     </div>
   </div>
@@ -164,6 +147,7 @@
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
+  // 1. CLOAK & THEME LOGIC
   const cloaks = {
     none: { t: "Mars", i: "https://google.com" },
     drive: { t: "My Drive - Google Drive", i: "https://gstatic.com" },
@@ -174,18 +158,9 @@
   function setCloak(type) {
     const cloak = cloaks[type];
     document.title = cloak.t;
-    
-    document.querySelectorAll('.cloak-opt').forEach(opt => {
-      opt.querySelector('span:last-child').innerText = "SELECT";
-      opt.style.color = "white";
-    });
-    
+    document.querySelectorAll('.cloak-opt').forEach(opt => opt.querySelector('span:last-child').innerText = "SELECT");
     const selected = document.querySelector(`.cloak-opt[data-type="${type}"]`);
-    if(selected) {
-      selected.querySelector('span:last-child').innerText = "ACTIVE";
-      selected.style.color = "var(--accent)";
-    }
-
+    if(selected) selected.querySelector('span:last-child').innerText = "ACTIVE";
     localStorage.setItem('mars-cloak', type);
   }
 
@@ -200,31 +175,55 @@
     localStorage.setItem('mars-theme', theme);
   }
 
+  // 2. DRAG LOGIC FOR HOME BUTTON
+  const dragItem = document.querySelector("#home-button");
+  let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+
+  dragItem.addEventListener("touchstart", dragStart, false);
+  dragItem.addEventListener("touchend", dragEnd, false);
+  dragItem.addEventListener("touchmove", drag, false);
+  dragItem.addEventListener("mousedown", dragStart, false);
+  dragItem.addEventListener("mouseup", dragEnd, false);
+  dragItem.addEventListener("mousemove", drag, false);
+
+  function dragStart(e) {
+    initialX = (e.type === "touchstart" ? e.touches[0].clientX : e.clientX) - xOffset;
+    initialY = (e.type === "touchstart" ? e.touches[0].clientY : e.clientY) - yOffset;
+    if (e.target === dragItem || dragItem.contains(e.target)) active = true;
+  }
+
+  function dragEnd(e) {
+    initialX = currentX; initialY = currentY; active = false;
+    // If it wasn't dragged much, treat as a click
+    if (Math.abs(xOffset) < 5 && Math.abs(yOffset) < 5) location.reload();
+  }
+
+  function drag(e) {
+    if (active) {
+      e.preventDefault();
+      currentX = (e.type === "touchmove" ? e.touches[0].clientX : e.clientX) - initialX;
+      currentY = (e.type === "touchmove" ? e.touches[0].clientY : e.clientY) - initialY;
+      xOffset = currentX; yOffset = currentY;
+      dragItem.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+    }
+  }
+
+  // 3. CORE FUNCTIONS
   function toggleSettings() {
-    const overlay = document.getElementById('settings-overlay');
-    overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+    const s = document.getElementById('settings-overlay');
+    s.style.display = s.style.display === 'flex' ? 'none' : 'flex';
   }
 
   function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').innerText = now.toLocaleTimeString();
+    document.getElementById('clock').innerText = new Date().toLocaleTimeString();
   }
   setInterval(updateClock, 1000);
 
   window.onload = () => {
-    const savedCloak = localStorage.getItem('mars-cloak') || 'none';
-    const savedTheme = localStorage.getItem('mars-theme') || 'sunset';
-    setCloak(savedCloak);
-    setTheme(savedTheme);
+    setCloak(localStorage.getItem('mars-cloak') || 'none');
+    setTheme(localStorage.getItem('mars-theme') || 'sunset');
     updateClock();
   };
-
-  const form = document.getElementById('uv-form');
-  const address = document.getElementById('uv-address');
-  form?.addEventListener('submit', e => {
-    e.preventDefault();
-    proxy(address.value);
-  });
 
   function proxy(url) {
     if (!url.includes('.') || url.includes(' ')) {
@@ -235,9 +234,7 @@
     window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
   }
 
-  window.addEventListener('keydown', e => {
-    if (e.key === '`') window.location.href = 'https://google.com';
-  });
+  window.addEventListener('keydown', e => { if (e.key === '`') window.location.href = 'https://google.com'; });
 </script>
 </body>
 </html>
