@@ -2,7 +2,8 @@
 <html>
 <head>
   <title>Mars</title>
-  <link rel="icon" type="image/png" href="https://img.icons8.com/?size=80&id=SPLOXMcI3XNv&format=png>
+  <!-- Direct Link to your Mars Icon -->
+  <link rel="icon" type="image/png" href="https://icons8.com">
   
   <style>
     @import url('https://googleapis.com');
@@ -14,7 +15,7 @@
       height: 100%;
       overflow: hidden;
       font-family: 'Inter', sans-serif;
-      /* The Sunset Gradient */
+      /* Your Sunset Gradient */
       background: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500);
       background-size: 400% 400%;
       animation: sunset-move 12s ease infinite;
@@ -92,6 +93,8 @@
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    if (typeof __uv$config === 'undefined') return;
+    
     window.navigator.serviceWorker.register('/uv/sw.js', {
       scope: __uv$config.prefix
     }).then(() => {
