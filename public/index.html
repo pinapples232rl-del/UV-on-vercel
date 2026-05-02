@@ -2,9 +2,7 @@
 <html>
 <head>
   <title>Mars</title>
-  <!-- Direct Link to your Mars Icon -->
   <link rel="icon" type="image/png" href="https://icons8.com">
-  
   <style>
     @import url('https://googleapis.com');
 
@@ -14,8 +12,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: 'Inter', sans-serif;
-      /* Your Sunset Gradient */
+      font-family: 'Plus Jakarta Sans', sans-serif; /* Smoother, modern font */
       background: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500);
       background-size: 400% 400%;
       animation: sunset-move 12s ease infinite;
@@ -33,62 +30,135 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      color: white;
+      z-index: 2;
     }
 
     .glass-panel {
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
-      padding: 50px 40px;
+      border-radius: 35px; /* Rounder edges for less 'blocky' feel */
+      padding: 60px 40px;
       width: 90%;
-      max-width: 550px;
+      max-width: 600px;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 30px;
-      letter-spacing: 8px;
+      font-size: 3rem;
+      margin-bottom: 40px;
+      letter-spacing: 12px;
       font-weight: 300;
+      color: white;
+      opacity: 0.9;
     }
 
+    /* Smooth Search Bar */
     input {
       width: 100%;
-      padding: 18px;
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       color: white;
       font-size: 1.1rem;
       outline: none;
       box-sizing: border-box;
       text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     input:focus {
-      border: 1px solid #ffa500;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transform: scale(1.02);
     }
+
     input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 300;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-}
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 1px;
+    }
+
+    /* Bookmark Styles */
+    .bookmarks {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 40px;
+    }
+
+    .bookmark-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .bookmark-item img {
+      width: 45px;
+      height: 45px;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+      transition: transform 0.3s ease;
+    }
+
+    .bookmark-item span {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+
+    .bookmark-item:hover {
+      transform: translateY(-8px);
+    }
+
+    .bookmark-item:hover img {
+      transform: scale(1.1);
+    }
+
+    .bookmark-item:hover span {
+      color: white;
+    }
+
   </style>
 </head>
 <body>
-  
+
   <div class="container">
     <div class="glass-panel">
       <h1>MARS</h1>
+      
       <form id="uv-form">
         <input id="uv-address" type="text" placeholder="Where to next..." autocomplete="off">
       </form>
+
+      <div class="bookmarks">
+        <div class="bookmark-item" onclick="proxy('https://now.gg')">
+          <img src="https://icons8.com" alt="Games">
+          <span>GAMES</span>
+        </div>
+
+        <div class="bookmark-item" onclick="proxy('https://flixhq.to')">
+          <img src="https://icons8.com" alt="Movies">
+          <span>MOVIES</span>
+        </div>
+
+        <div class="bookmark-item" onclick="proxy('https://google.com')">
+          <img src="https://icons8.com" alt="Google">
+          <span>GOOGLE</span>
+        </div>
+
+        <div class="bookmark-item" onclick="proxy('https://youtube.com')">
+          <img src="https://icons8.com" alt="YouTube">
+          <span>YOUTUBE</span>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -98,24 +168,32 @@
   const form = document.getElementById('uv-form');
   const input = document.getElementById('uv-address');
 
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
+  // Unified Proxy Function
+  async function proxy(url) {
     if (typeof __uv$config === 'undefined') return;
-    
     window.navigator.serviceWorker.register('/uv/sw.js', {
       scope: __uv$config.prefix
     }).then(() => {
-      let url = input.value.trim();
       if (!isUrl(url)) url = 'https://google.com' + encodeURIComponent(url);
       else if (!(url.startsWith('https://') || url.startsWith('http://'))) url = 'http://' + url;
       window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
     });
+  }
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    proxy(input.value.trim());
   });
 
   function isUrl(val = '') {
     if (/^http(s?):\/\//.test(val) || val.includes('.') && val.substr(0, 1) !== ' ') return true;
     return false;
   };
+
+  // Panic Switch
+  document.addEventListener('keydown', (e) => {
+    if (e.key === "Escape") window.location.href = "https://google.com";
+  });
 </script>
 
 </body>
