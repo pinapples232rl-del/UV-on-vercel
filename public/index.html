@@ -2,8 +2,11 @@
 <html>
 <head>
   <title>Mars</title>
-  <link rel="icon" type="image/png" href="https://flaticon.com">
+  <!-- Default Icon -->
+  <link id="favicon" rel="icon" type="image/png" href="https://google.com">
   <style>
+    @import url('https://googleapis.com');
+
     body, html {
       margin: 0;
       padding: 0;
@@ -11,15 +14,9 @@
       height: 100%;
       overflow: hidden;
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(180deg, #0a0a2a 0%, #4a1e1e 40%, #ff4500 80%, #ff8c00 100%);
-      background-size: 400% 400%;
-      animation: sunset-glow 15s ease infinite;
-    }
-
-    @keyframes sunset-glow {
-      0% { background-position: 50% 0%; }
-      50% { background-position: 50% 100%; }
-      100% { background-position: 50% 0%; }
+      /* Mars Atmosphere Gradient */
+      background: radial-gradient(circle at center, #4a1e1e 0%, #0a0a2a 100%);
+      background-color: #0a0a2a;
     }
 
     .container {
@@ -29,51 +26,88 @@
       justify-content: center;
       height: 100vh;
       color: white;
+      z-index: 2;
+      position: relative;
     }
 
-    /* The Glassy Box */
+    /* Animated Glow */
+    .container::after {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: #ff4500;
+      filter: blur(150px);
+      opacity: 0.2;
+      z-index: -1;
+      animation: pulse 8s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 0.1; }
+      to { transform: scale(1.5); opacity: 0.3; }
+    }
+
     .glass-panel {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      background: rgba(15, 15, 15, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 50px 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
       text-align: center;
-      width: 80%;
-      max-width: 500px;
+      width: 90%;
+      max-width: 600px;
+      transition: transform 0.3s ease;
+    }
+
+    .glass-panel:hover {
+      transform: translateY(-5px);
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      letter-spacing: 3px;
+      font-size: 2.8rem;
+      margin-bottom: 30px;
+      letter-spacing: 8px;
       font-weight: 300;
+      color: #ff8c00;
+      text-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
     }
 
-    /* Smooth Glassy Search Bar */
     input {
       width: 100%;
-      padding: 15px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      background: rgba(255, 255, 255, 0.1);
+      padding: 18px 25px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
       color: white;
-      font-size: 1rem;
+      font-size: 1.1rem;
       outline: none;
-      transition: 0.3s;
+      transition: all 0.3s;
       box-sizing: border-box;
+      text-align: center;
     }
 
     input:focus {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #ff4500;
+      box-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
     }
 
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+    .footer-text {
+      margin-top: 25px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 1px;
+    }
+
+    /* Hotkeys hint */
+    .shortcuts {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.3);
     }
   </style>
 </head>
@@ -81,26 +115,51 @@
 
   <div class="container">
     <div class="glass-panel">
-      <h1>WELCOME TO MARS</h1>
+      <h1>MARS</h1>
       <form id="uv-form">
-        <input id="uv-address" type="text" placeholder="Search the web or enter a URL" autocomplete="off">
+        <input id="uv-address" type="text" placeholder="Explore the universe..." autocomplete="off">
       </form>
+      <div class="footer-text">Secure Gateway Active</div>
     </div>
+    <div class="shortcuts">Press <b>ESC</b> to Panic (Open Google)</div>
   </div>
+
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
-  const form = document.querySelector('form');
-  const input = document.querySelector('input');
+  const form = document.getElementById('uv-form');
+  const input = document.getElementById('uv-address');
+
+  // 1. PANIC BUTTON: Pressing Escape redirects you immediately
+  document.addEventListener('keydown', (e) => {
+    if (e.key === "Escape") window.location.href = "https://classroom.google.com";
+  });
+
+  // 2. TAB CLOAKING: Changes tab name and icon automatically
+  function cloak() {
+    document.title = "Google Drive";
+    document.getElementById('favicon').href = "https://gstatic.com";
+  }
+  // Uncomment the line below to turn on Cloaking by default!
+  // cloak();
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    
+    // Register Service Worker
     window.navigator.serviceWorker.register('/uv/sw.js', {
       scope: __uv$config.prefix
     }).then(() => {
       let url = input.value.trim();
-      if (!isUrl(url)) url = 'https://google.com' + url;
-      else if (!(url.startsWith('https://') || url.startsWith('http://'))) url = 'http://' + url;
+      
+      // 3. IMPROVED SEARCH LOGIC
+      if (!isUrl(url)) {
+        // If not a URL, search on Google
+        url = 'https://google.com' + encodeURIComponent(url);
+      } else if (!(url.startsWith('https://') || url.startsWith('http://'))) {
+        // Add protocol if missing
+        url = 'http://' + url;
+      }
 
       window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
     });
