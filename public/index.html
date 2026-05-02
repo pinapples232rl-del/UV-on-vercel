@@ -9,8 +9,8 @@
     
     body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; background: #000; transition: 0.5s ease; }
     
-    /* Background Layer */
-    .bg-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); background-size: 400% 400%; animation: sunset 15s ease infinite; z-index: -1; background-position: center; background-repeat: no-repeat; }
+    /* RESTORED: Animated Background Layer */
+    .bg-layer { position: fixed; inset: 0; background: var(--bg); background-size: 400% 400%; animation: sunset 15s ease infinite; z-index: -1; transition: opacity 0.8s ease; }
     @keyframes sunset { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
     /* UI Elements */
@@ -44,6 +44,7 @@
 </head>
 <body>
 
+  <!-- Animated Sunset Background restores here -->
   <div class="bg-layer" id="main-bg"></div>
 
   <div id="settings-overlay">
@@ -107,7 +108,6 @@
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
-  // 1. Core State
   let engine = localStorage.getItem('mars-engine') || 'google';
   const engines = { google: 'https://google.com', bing: 'https://bing.com', duck: 'https://duckduckgo.com' };
 
@@ -118,11 +118,16 @@
   }
   setEngine(engine);
 
-  // 2. Wallpaper & Cloak
   function setCustomBg(url) {
-    if(!url) return;
+    if(!url) {
+      document.body.style.backgroundImage = 'none';
+      document.getElementById('main-bg').style.opacity = '1';
+      localStorage.removeItem('mars-bg');
+      return;
+    }
     document.body.style.backgroundImage = `url('${url}')`;
     document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
     document.getElementById('main-bg').style.opacity = '0';
     localStorage.setItem('mars-bg', url);
   }
@@ -136,7 +141,6 @@
     localStorage.setItem('mars-cloak', type);
   }
 
-  // 3. Proxy Logic
   function proxy(url) {
     window.navigator.serviceWorker.register('/uv/sw.js', { scope: __uv$config.prefix }).then(() => {
       let target = url.trim();
@@ -147,14 +151,10 @@
   }
 
   document.getElementById('uv-form').onsubmit = (e) => { e.preventDefault(); proxy(document.getElementById('uv-address').value); };
-
-  // 4. UI Extras
   function toggleSettings() { const s = document.getElementById('settings-overlay'); s.style.display = s.style.display === 'flex' ? 'none' : 'flex'; }
   function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
   setInterval(updateClock, 1000); updateClock();
-  window.onkeydown = (e) => { if(e.key === "Escape") window.location.href = "https://google.com"; };
 
-  // 5. Draggable Home
   const btn = document.getElementById('home-button');
   let isDragging = false, startX, startY;
   btn.onpointerdown = (e) => {
@@ -164,7 +164,6 @@
     btn.onpointerup = () => { btn.onpointermove = null; if (!isDragging) window.location.href = '/'; };
   };
 
-  // Init
   if (localStorage.getItem('mars-cloak')) setCloak(localStorage.getItem('mars-cloak'));
   if (localStorage.getItem('mars-bg')) setCustomBg(localStorage.getItem('mars-bg'));
 </script>
