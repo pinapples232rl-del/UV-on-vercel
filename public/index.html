@@ -5,13 +5,19 @@
   <style>
     @import url('https://googleapis.com');
 
+    :root {
+      --bg: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500);
+      --accent: #ff8c00;
+      --glass: rgba(0, 0, 0, 0.3);
+    }
+
     body, html {
       margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500);
+      background: var(--bg);
       background-size: 400% 400%;
-      animation: sunset-move 12s ease infinite;
-      color: white;
+      animation: sunset-move 15s ease infinite;
+      transition: background 0.5s ease;
     }
 
     @keyframes sunset-move {
@@ -20,95 +26,101 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Top Bar */
+    /* UI Layout */
     .top-bar {
-      position: absolute; top: 0; left: 0; right: 0; padding: 20px 30px;
+      position: absolute; top: 0; left: 0; right: 0; padding: 25px 40px;
       display: flex; justify-content: space-between; align-items: center; z-index: 10;
     }
 
     #clock {
-      font-size: 0.9rem; font-weight: 300; letter-spacing: 2px;
+      font-size: 0.9rem; font-weight: 300; letter-spacing: 2px; color: white;
       background: rgba(0,0,0,0.3); padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(10px);
     }
 
     .settings-btn {
       cursor: pointer; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 50px;
-      backdrop-filter: blur(10px); transition: 0.3s;
+      backdrop-filter: blur(10px); transition: 0.3s; font-size: 20px;
     }
 
     .settings-btn:hover { background: rgba(255,255,255,0.1); transform: rotate(90deg); }
 
-    /* Main UI */
     .container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+    
     .glass-panel {
-      background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(25px);
+      background: var(--glass); backdrop-filter: blur(25px);
       border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px;
       padding: 60px 40px; width: 90%; max-width: 600px; text-align: center;
+      transition: all 0.5s ease;
     }
 
-    h1 { font-size: 3rem; margin-bottom: 40px; letter-spacing: 12px; font-weight: 300; }
+    h1 { font-size: 3.5rem; margin-bottom: 40px; letter-spacing: 15px; font-weight: 300; color: white; }
 
     input {
-      width: 100%; padding: 20px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%; padding: 22px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(255, 255, 255, 0.08); color: white; font-size: 1.1rem; outline: none;
       text-align: center; transition: 0.4s;
     }
     input:focus { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); transform: scale(1.02); }
 
-    /* Bookmarks */
+    /* Icons & Bookmarks */
     .bookmarks { display: flex; justify-content: center; gap: 30px; margin-top: 40px; }
     .bookmark-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; }
     .bookmark-item:hover { transform: translateY(-8px); }
-    .bookmark-item span { font-size: 0.65rem; margin-top: 10px; opacity: 0.7; letter-spacing: 1px; font-weight: 600; }
-    
+    .bookmark-item span { font-size: 0.65rem; margin-top: 10px; color: white; opacity: 0.7; letter-spacing: 1px; font-weight: 600; }
     .svg-icon { width: 32px; height: 32px; }
     .emoji-icon { font-size: 32px; }
 
-    /* Settings Overlay */
+    /* Fullscreen Overlay Settings */
     #settings-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
       display: none; justify-content: center; align-items: center; z-index: 100;
     }
     .settings-content {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-      padding: 40px; border-radius: 30px; width: 80%; max-width: 500px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+      padding: 40px; border-radius: 40px; width: 85%; max-width: 500px; color: white;
     }
     .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .settings-section { text-align: left; margin-bottom: 20px; }
-    .settings-section h3 { font-size: 0.9rem; color: #ff8c00; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-    .settings-option { 
-      background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 12px; 
-      margin-bottom: 10px; display: flex; justify-content: space-between; cursor: pointer;
+    .settings-section { text-align: left; margin-bottom: 25px; }
+    .settings-section h3 { font-size: 0.8rem; color: var(--accent); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 2px; }
+    
+    .option { 
+      background: rgba(255,255,255,0.05); padding: 15px 20px; border-radius: 15px; 
+      margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; transition: 0.2s; border: 1px solid transparent;
     }
-    .settings-option:hover { background: rgba(255,255,255,0.1); }
+    .option:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.1); }
+    .option span:last-child { font-size: 0.8rem; opacity: 0.6; font-weight: 600; }
   </style>
 </head>
 <body>
 
+  <!-- Settings Menu -->
   <div id="settings-overlay">
     <div class="settings-content">
       <div class="settings-header">
-        <h2 style="margin:0; font-weight:300;">Settings</h2>
-        <span onclick="toggleSettings()" style="cursor:pointer; font-size:1.5rem;">×</span>
+        <h2 style="margin:0; font-weight:300; letter-spacing:2px;">System Settings</h2>
+        <span onclick="toggleSettings()" style="cursor:pointer; font-size:2rem; opacity:0.5;">&times;</span>
       </div>
       
       <div class="settings-section">
         <h3>Privacy & Cloaking</h3>
-        <div class="settings-option" onclick="cloakTab()"><span>Tab Cloak (Google Drive)</span><span>OFF</span></div>
-        <div class="settings-option"><span>Panic Key (Esc)</span><span>Active</span></div>
+        <div class="option" onclick="cloakTab()"><span>Tab Cloak</span><span id="cloak-status">OFF</span></div>
+        <div class="option" onclick="alert('Panic key is permanently set to Escape.')"><span>Panic Key</span><span>ESC</span></div>
       </div>
 
       <div class="settings-section">
-        <h3>Browsing</h3>
-        <div class="settings-option"><span>Search Engine</span><span>Google</span></div>
-        <div class="settings-option"><span>Clear History</span><span>Clear</span></div>
+        <h3>UI Themes</h3>
+        <div class="option" onclick="setTheme('sunset')"><span>Mars Sunset (Default)</span><span>Select</span></div>
+        <div class="option" onclick="setTheme('midnight')"><span>Midnight Void</span><span>Select</span></div>
+        <div class="option" onclick="setTheme('forest')"><span>Emerald Forest</span><span>Select</span></div>
+        <div class="option" onclick="setTheme('ocean')"><span>Deep Ocean</span><span>Select</span></div>
       </div>
 
       <div class="settings-section">
-        <h3>More</h3>
-        <div class="settings-option"><span>UI Theme</span><span>Sunset</span></div>
-        <div class="settings-option"><span>About Mars</span><span>v2.0</span></div>
+        <h3>System</h3>
+        <div class="option" onclick="location.reload()"><span>Restart Mars</span><span>Reload</span></div>
+        <div class="option" onclick="alert('Mars OS v2.5 Clean Build')"><span>Version Info</span><span>v2.5</span></div>
       </div>
     </div>
   </div>
@@ -126,14 +138,10 @@
         <div class="bookmark-item" onclick="proxy('https://gn-math.dev')"><div class="emoji-icon">🎮</div><span>GAMES</span></div>
         <div class="bookmark-item" onclick="proxy('https://dorawatch.org')"><div class="emoji-icon">🎬</div><span>MOVIES</span></div>
         <div class="bookmark-item" onclick="proxy('https://monochrome.tf')"><div class="emoji-icon">🎵</div><span>MUSIC</span></div>
-        
-        <!-- SVG GOOGLE -->
         <div class="bookmark-item" onclick="proxy('https://google.com')">
           <svg class="svg-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           <span>GOOGLE</span>
         </div>
-
-        <!-- SVG YOUTUBE -->
         <div class="bookmark-item" onclick="proxy('https://youtube.com')">
           <svg class="svg-icon" viewBox="0 0 24 24"><path fill="#FF0000" d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.9.5 9.3.5 9.3.5s7.4 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"/><path fill="#FFF" d="M9.5 15.5l6.3-3.5-6.3-3.5z"/></svg>
           <span>YOUTUBE</span>
@@ -145,6 +153,36 @@
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
+  // 1. Theme Logic
+  function setTheme(theme) {
+    const root = document.documentElement;
+    if (theme === 'sunset') {
+      root.style.setProperty('--bg', 'linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500)');
+      root.style.setProperty('--accent', '#ff8c00');
+    } else if (theme === 'midnight') {
+      root.style.setProperty('--bg', 'linear-gradient(-45deg, #000000, #0f0c29, #302b63, #24243e)');
+      root.style.setProperty('--accent', '#00d2ff');
+    } else if (theme === 'forest') {
+      root.style.setProperty('--bg', 'linear-gradient(-45deg, #0a2e0a, #114b11, #1a6d1a, #2ebf2e)');
+      root.style.setProperty('--accent', '#39ff14');
+    } else if (theme === 'ocean') {
+      root.style.setProperty('--bg', 'linear-gradient(-45deg, #021927, #045c91, #0ad1c8, #07eb9a)');
+      root.style.setProperty('--accent', '#00fff2');
+    }
+  }
+
+  // 2. Cloak Logic
+  function cloakTab() {
+    document.title = "My Drive - Google Drive";
+    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon'; link.rel = 'shortcut icon';
+    link.href = 'https://gstatic.com';
+    document.getElementsByTagName('head')[0].appendChild(link);
+    document.getElementById('cloak-status').innerText = "ON";
+    alert('Tab Cloaked as Google Drive!');
+  }
+
+  // 3. System Logic
   function updateClock() {
     const now = new Date();
     document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
@@ -154,15 +192,6 @@
   function toggleSettings() {
     const s = document.getElementById('settings-overlay');
     s.style.display = (s.style.display === 'flex') ? 'none' : 'flex';
-  }
-
-  function cloakTab() {
-    document.title = "Google Drive";
-    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-    link.type = 'image/x-icon'; link.rel = 'shortcut icon';
-    link.href = 'https://gstatic.com';
-    document.getElementsByTagName('head')[0].appendChild(link);
-    alert('Tab Cloaked as Google Drive!');
   }
 
   const form = document.getElementById('uv-form');
