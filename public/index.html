@@ -4,122 +4,67 @@
   <title>Mars</title>
   <style>
     @import url('https://googleapis.com');
-
-    :root {
-      --bg: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500);
-      --accent: #ff8c00;
-    }
-
-    body, html {
-      margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: var(--bg);
-      background-size: 400% 400%;
-      animation: sunset-move 15s ease infinite;
-      transition: background 0.5s ease;
-    }
-
-    @keyframes sunset-move {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .top-bar {
-      position: absolute; top: 0; left: 0; right: 0; padding: 25px 40px;
-      display: flex; justify-content: space-between; align-items: center; z-index: 10;
-    }
-
-    #home-button {
-      position: fixed; bottom: 25px; left: 25px; z-index: 9999;
-      cursor: grab; background: rgba(0,0,0,0.4); padding: 15px; 
-      border-radius: 50%; backdrop-filter: blur(15px); transition: background 0.3s;
-      display: flex; align-items: center; justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.2); touch-action: none;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3); user-select: none;
-    }
-    #home-button:active { cursor: grabbing; }
-
-    #clock {
-      font-size: 0.9rem; color: white; background: rgba(0,0,0,0.3); 
-      padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(10px);
-    }
-
-    .icon-btn {
-      cursor: pointer; background: rgba(0,0,0,0.3); padding: 12px; 
-      border-radius: 50px; backdrop-filter: blur(10px); transition: 0.3s;
-      display: flex; align-items: center; justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.1); outline: none;
-    }
-
-    .container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+    :root { --bg: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500); --accent: #ff8c00; }
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); background-size: cover; background-position: center; transition: 0.5s ease; }
     
-    .glass-panel {
-      background: rgba(0,0,0,0.2); backdrop-filter: blur(25px);
-      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px;
-      padding: 60px 40px; width: 500px; text-align: center;
-    }
+    .bg-animation { position: fixed; top:0; left:0; width: 100%; height: 100%; background: var(--bg); background-size: 400% 400%; animation: sunset-move 15s ease infinite; z-index: -1; }
+    @keyframes sunset-move { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-    h1 { font-size: 3.5rem; margin-bottom: 40px; letter-spacing: 15px; font-weight: 300; color: white; margin-top: 0; }
+    #home-button { position: fixed; bottom: 25px; left: 25px; z-index: 10000; cursor: grab; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 50%; backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.2); touch-action: none; user-select: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .top-bar { position: absolute; top: 0; left: 0; right: 0; padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+    #clock { font-size: 0.9rem; color: white; background: rgba(0,0,0,0.3); padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(10px); }
+    .icon-btn { cursor: pointer; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 50px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    
+    .container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+    .glass-panel { background: rgba(0,0,0,0.25); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; padding: 60px 40px; width: 500px; text-align: center; }
+    h1 { font-size: 3.5rem; margin-bottom: 40px; letter-spacing: 15px; font-weight: 300; color: white; margin-top: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    input { width: 100%; max-width: 400px; padding: 18px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.1); color: white; font-size: 1rem; outline: none; text-align: center; }
 
-    input {
-      width: 100%; max-width: 400px; padding: 18px; border-radius: 15px; 
-      border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.08); 
-      color: white; font-size: 1rem; outline: none; text-align: center;
-    }
-
-    /* Updated Bookmark Styling */
-    .bookmarks { display: flex; justify-content: center; gap: 25px; margin-top: 40px; width: 100%; }
+    .bookmarks { display: flex; justify-content: center; gap: 20px; margin-top: 40px; }
     .bookmark-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; }
     .bookmark-item:hover { transform: translateY(-8px); }
-    
-    .bookmark-icon {
-      width: 50px; height: 50px; border-radius: 12px; 
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 12px; background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .bookmark-icon img { width: 30px; height: 30px; object-fit: contain; }
-    
-    .bookmark-item span { font-size: 0.65rem; color: white; opacity: 0.8; font-weight: 800; letter-spacing: 1px; }
+    .bookmark-icon { width: 55px; height: 55px; border-radius: 14px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.15); overflow: hidden; }
+    .bookmark-icon img { width: 32px; height: 32px; }
+    .bookmark-item span { font-size: 0.6rem; color: white; font-weight: 800; letter-spacing: 1px; opacity: 0.8; }
 
-    #settings-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
-      display: none; justify-content: center; align-items: center; z-index: 100;
-    }
-    .settings-content {
-      background: rgba(255,255,255,0.05); padding: 40px; border-radius: 35px; 
-      width: 450px; max-height: 80vh; overflow-y: auto; color: white; border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .section-label { font-size: 0.7rem; opacity: 0.4; letter-spacing: 2px; margin: 25px 0 10px 0; font-weight: 800; color: var(--accent); }
-    .option { 
-      background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 12px; 
-      margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;
-    }
+    #settings-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); display: none; justify-content: center; align-items: center; z-index: 10001; }
+    .settings-content { background: rgba(255,255,255,0.05); padding: 35px; border-radius: 30px; width: 450px; max-height: 85vh; overflow-y: auto; color: white; border: 1px solid rgba(255,255,255,0.1); }
+    .section-label { font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px; margin: 20px 0 10px 0; font-weight: 800; color: var(--accent); }
+    .option { background: rgba(255,255,255,0.05); padding: 12px 18px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+    .option:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.1); }
+    .setting-input { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px; border-radius: 8px; width: 100%; margin-top: 5px; }
   </style>
 </head>
 <body>
 
+  <div class="bg-animation" id="main-bg"></div>
+
   <div id="settings-overlay">
     <div class="settings-content">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-        <h2 style="margin:0; font-weight:300;">System Config</h2>
-        <span onclick="toggleSettings()" style="cursor:pointer; font-size:1.5rem;">&times;</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2 style="font-weight:300;">System Config</h2>
+        <span onclick="toggleSettings()" style="cursor:pointer; font-size:2rem;">&times;</span>
       </div>
 
-      <div class="section-label">CLOAK GALLERY</div>
-      <div class="option cloak-opt" data-type="none" onclick="setCloak('none')"><span>Default (Mars)</span><span>ACTIVE</span></div>
-      <div class="option cloak-opt" data-type="drive" onclick="setCloak('drive')"><span>Google Drive</span><span>SELECT</span></div>
-      <div class="option cloak-opt" data-type="classroom" onclick="setCloak('classroom')"><span>Classroom</span><span>SELECT</span></div>
-      <div class="option cloak-opt" data-type="gmail" onclick="setCloak('gmail')"><span>Gmail</span><span>SELECT</span></div>
+      <div class="section-label">SEARCH ENGINE</div>
+      <div class="option" onclick="setEngine('google')"><span>Google</span><span id="check-google"></span></div>
+      <div class="option" onclick="setEngine('bing')"><span>Bing</span><span id="check-bing"></span></div>
+      <div class="option" onclick="setEngine('duck')"><span>DuckDuckGo</span><span id="check-duck"></span></div>
 
-      <div class="section-label">THEME ENGINE</div>
-      <div class="option" onclick="setTheme('sunset')"><span>Mars Sunset</span><span>SELECT</span></div>
-      <div class="option" onclick="setTheme('midnight')"><span>Midnight Void</span><span>SELECT</span></div>
-      <div class="option" onclick="setTheme('nebula')"><span>Purple Nebula</span><span>SELECT</span></div>
-      <div class="option" onclick="setTheme('glacier')"><span>Arctic Glacier</span><span>SELECT</span></div>
+      <div class="section-label">CUSTOM BACKGROUND</div>
+      <div style="padding: 0 5px;">
+        <input type="text" id="bg-url" class="setting-input" placeholder="Paste Image URL..." onchange="setCustomBg(this.value)">
+        <p style="font-size: 0.6rem; opacity: 0.5; margin-top: 10px;">Or upload a file:</p>
+        <input type="file" id="bg-file" class="setting-input" accept="image/*" onchange="uploadBg(event)">
+      </div>
+
+      <div class="section-label">CLOAKING</div>
+      <div class="option" onclick="setCloak('none')"><span>Mars (Default)</span></div>
+      <div class="option" onclick="setCloak('drive')"><span>Google Drive</span></div>
+      <div class="option" onclick="setCloak('classroom')"><span>Classroom</span></div>
+
+      <div class="section-label">UTILITIES</div>
+      <div class="option" onclick="localStorage.clear(); location.reload();" style="color: #ff6b6b;"><span>Reset All Settings</span></div>
     </div>
   </div>
 
@@ -138,84 +83,83 @@
   <div class="container">
     <div class="glass-panel">
       <h1>MARS</h1>
-      <form id="uv-form" style="width:100%;">
-        <input id="uv-address" type="text" placeholder="Where to next..." autocomplete="off">
-      </form>
-      
+      <form id="uv-form"><input id="uv-address" type="text" placeholder="Where to next..." autocomplete="off"></form>
       <div class="bookmarks">
         <div class="bookmark-item" onclick="proxy('https://google.com')">
-          <div class="bookmark-icon"><img src="https://google.com" alt="Google"></div>
+          <div class="bookmark-icon"><img src="https://google.com"></div>
           <span>GOOGLE</span>
         </div>
         <div class="bookmark-item" onclick="proxy('https://youtube.com')">
-          <div class="bookmark-icon"><img src="https://youtube.com" alt="YouTube"></div>
+          <div class="bookmark-icon"><img src="https://google.com"></div>
           <span>YOUTUBE</span>
         </div>
-        <div class="bookmark-item" onclick="proxy('https://fmovies.ps')">
-          <div class="bookmark-icon">🎬</div>
+        <div class="bookmark-item" onclick="proxy('https://tubitv.com')">
+          <div class="bookmark-icon" style="font-size: 24px;">🍿</div>
           <span>MOVIES</span>
         </div>
-        <div class="bookmark-item" onclick="proxy('https://poki.com')">
-          <div class="bookmark-icon">🎮</div>
+        <div class="bookmark-item" onclick="proxy('https://1v1.lol')">
+          <div class="bookmark-icon" style="font-size: 24px;">🔫</div>
           <span>GAMES</span>
         </div>
       </div>
-
     </div>
   </div>
 
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
-  // 1. CLOAK & THEME LOGIC
+  // 1. SEARCH ENGINE LOGIC
+  let currentEngine = localStorage.getItem('mars-engine') || 'google';
+  const engines = {
+    google: 'https://google.com',
+    bing: 'https://bing.com',
+    duck: 'https://duckduckgo.com'
+  };
+
+  function setEngine(e) {
+    currentEngine = e;
+    localStorage.setItem('mars-engine', e);
+    document.querySelectorAll('[id^="check-"]').forEach(el => el.innerText = '');
+    document.getElementById('check-' + e).innerText = '●';
+  }
+  setEngine(currentEngine);
+
+  // 2. BACKGROUND LOGIC
+  function setCustomBg(url) {
+    if(!url) return;
+    document.body.style.backgroundImage = `url('${url}')`;
+    document.getElementById('main-bg').style.display = 'none';
+    localStorage.setItem('mars-bg', url);
+  }
+
+  function uploadBg(event) {
+    const reader = new FileReader();
+    reader.onload = () => setCustomBg(reader.result);
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  // 3. CLOAKING
   const cloaks = {
     none: { t: "Mars", i: "" },
     drive: { t: "My Drive - Google Drive", i: "https://gstatic.com" },
-    classroom: { t: "Classes", i: "https://gstatic.com" },
-    gmail: { t: "Gmail", i: "https://gstatic.com" }
+    classroom: { t: "Classes", i: "https://gstatic.com" }
   };
 
   function setCloak(type) {
     const cloak = cloaks[type];
     document.title = cloak.t;
     let link = document.querySelector("link[rel~='icon']");
-    if (!link) {
-      link = document.createElement('link');
-      link.rel = 'icon';
-      document.head.appendChild(link);
-    }
+    if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
     link.href = cloak.i;
     localStorage.setItem('mars-cloak', type);
   }
 
-  function setTheme(theme) {
-    const bodies = {
-      sunset: 'linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500)',
-      midnight: 'linear-gradient(-45deg, #000000, #1a1a2e, #16213e, #0f3460)',
-      nebula: 'linear-gradient(-45deg, #020111, #3a1c71, #d76d77, #ffaf7b)',
-      glacier: 'linear-gradient(-45deg, #203a43, #2c5364, #0f2027)'
-    };
-    document.body.style.background = bodies[theme];
-    document.body.style.backgroundSize = "400% 400%";
-    localStorage.setItem('mars-theme', theme);
-  }
-
-  // 2. PROXY LOGIC
-  const form = document.getElementById('uv-form');
-  const address = document.getElementById('uv-address');
-
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    proxy(address.value);
-  });
-
+  // 4. PROXY
   function proxy(url) {
-    window.navigator.serviceWorker.register('/uv/sw.js', {
-      scope: __uv$config.prefix
-    }).then(() => {
+    window.navigator.serviceWorker.register('/uv/sw.js', { scope: __uv$config.prefix }).then(() => {
       let target = url.trim();
       if (!target.includes('.') || target.includes(' ')) {
-        target = `https://google.com{encodeURIComponent(target)}`;
+        target = engines[currentEngine] + encodeURIComponent(target);
       } else if (!target.startsWith('http')) {
         target = `https://${target}`;
       }
@@ -223,47 +167,28 @@
     });
   }
 
-  // 3. UI EXTRAS
-  function toggleSettings() {
-    const overlay = document.getElementById('settings-overlay');
-    overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
-  }
+  document.getElementById('uv-form').onsubmit = (e) => { e.preventDefault(); proxy(document.getElementById('uv-address').value); };
 
-  function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').innerText = now.toLocaleTimeString();
-  }
-  setInterval(updateClock, 1000);
-  updateClock();
+  // 5. UI EXTRAS
+  function toggleSettings() { const s = document.getElementById('settings-overlay'); s.style.display = s.style.display === 'flex' ? 'none' : 'flex'; }
+  function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
+  setInterval(updateClock, 1000); updateClock();
 
-  // 4. DRAGGABLE HOME BUTTON
+  window.onkeydown = (e) => { if(e.key === "Escape") window.location.href = "https://google.com"; };
+
+  // 6. DRAGGABLE HOME BUTTON
   const btn = document.getElementById('home-button');
-  let isDragging = false;
-  let startX, startY;
-
+  let isDragging = false, startX, startY;
   btn.onpointerdown = (e) => {
-    isDragging = false;
-    startX = e.clientX - btn.getBoundingClientRect().left;
-    startY = e.clientY - btn.getBoundingClientRect().top;
+    isDragging = false; startX = e.clientX - btn.getBoundingClientRect().left; startY = e.clientY - btn.getBoundingClientRect().top;
     btn.setPointerCapture(e.pointerId);
-
-    btn.onpointermove = (ev) => {
-      isDragging = true;
-      btn.style.left = (ev.clientX - startX) + 'px';
-      btn.style.top = (ev.clientY - startY) + 'px';
-      btn.style.bottom = 'auto';
-    };
-
-    btn.onpointerup = (ev) => {
-      btn.onpointermove = null;
-      btn.onpointerup = null;
-      if (!isDragging) window.location.href = '/';
-    };
+    btn.onpointermove = (ev) => { isDragging = true; btn.style.left = (ev.clientX - startX) + 'px'; btn.style.top = (ev.clientY - startY) + 'px'; btn.style.bottom = 'auto'; };
+    btn.onpointerup = () => { btn.onpointermove = null; if (!isDragging) window.location.href = '/'; };
   };
 
-  // Load Saved
-  if (localStorage.getItem('mars-theme')) setTheme(localStorage.getItem('mars-theme'));
+  // Load Saved State
   if (localStorage.getItem('mars-cloak')) setCloak(localStorage.getItem('mars-cloak'));
+  if (localStorage.getItem('mars-bg')) setCustomBg(localStorage.getItem('mars-bg'));
 </script>
 </body>
 </html>
