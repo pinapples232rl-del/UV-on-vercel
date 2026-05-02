@@ -8,7 +8,6 @@
     :root {
       --bg: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500);
       --accent: #ff8c00;
-      --glass: rgba(0, 0, 0, 0.3);
     }
 
     body, html {
@@ -17,7 +16,6 @@
       background: var(--bg);
       background-size: 400% 400%;
       animation: sunset-move 15s ease infinite;
-      transition: background 0.5s ease;
     }
 
     @keyframes sunset-move {
@@ -26,102 +24,99 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* UI Layout */
+    /* Top Bar */
     .top-bar {
       position: absolute; top: 0; left: 0; right: 0; padding: 25px 40px;
       display: flex; justify-content: space-between; align-items: center; z-index: 10;
     }
 
     #clock {
-      font-size: 0.9rem; font-weight: 300; letter-spacing: 2px; color: white;
-      background: rgba(0,0,0,0.3); padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(10px);
+      font-size: 0.9rem; color: white; background: rgba(0,0,0,0.3); 
+      padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(10px);
     }
 
     .settings-btn {
-      cursor: pointer; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 50px;
-      backdrop-filter: blur(10px); transition: 0.3s; font-size: 20px;
+      cursor: pointer; background: rgba(0,0,0,0.3); padding: 10px; 
+      border-radius: 50px; backdrop-filter: blur(10px); transition: 0.3s;
     }
 
-    .settings-btn:hover { background: rgba(255,255,255,0.1); transform: rotate(90deg); }
-
+    /* Main UI */
     .container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
     
     .glass-panel {
-      background: var(--glass); backdrop-filter: blur(25px);
+      background: rgba(0,0,0,0.3); backdrop-filter: blur(25px);
       border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px;
-      padding: 60px 40px; width: 90%; max-width: 600px; text-align: center;
-      transition: all 0.5s ease;
+      padding: 60px 40px; width: 500px; /* Fixed width for perfect symmetry */
+      text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.2);
     }
 
-    h1 { font-size: 3.5rem; margin-bottom: 40px; letter-spacing: 15px; font-weight: 300; color: white; }
+    h1 { font-size: 3.5rem; margin-bottom: 40px; letter-spacing: 15px; font-weight: 300; color: white; margin-top: 0; }
 
+    /* Symmetrical Search Bar */
+    .form-container { width: 100%; display: flex; justify-content: center; }
     input {
-      width: 100%; padding: 22px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.08); color: white; font-size: 1.1rem; outline: none;
-      text-align: center; transition: 0.4s;
+      width: 100%; max-width: 400px; padding: 18px; border-radius: 15px; 
+      border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.08); 
+      color: white; font-size: 1rem; outline: none; text-align: center;
     }
-    input:focus { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); transform: scale(1.02); }
 
-    /* Icons & Bookmarks */
-    .bookmarks { display: flex; justify-content: center; gap: 30px; margin-top: 40px; }
-    .bookmark-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.3s; }
-    .bookmark-item:hover { transform: translateY(-8px); }
-    .bookmark-item span { font-size: 0.65rem; margin-top: 10px; color: white; opacity: 0.7; letter-spacing: 1px; font-weight: 600; }
-    .svg-icon { width: 32px; height: 32px; }
-    .emoji-icon { font-size: 32px; }
+    /* Level Bookmarks */
+    .bookmarks { 
+      display: grid; 
+      grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+      gap: 10px; 
+      margin-top: 40px; 
+      width: 100%;
+    }
+    
+    .bookmark-item { 
+      display: flex; flex-direction: column; align-items: center; 
+      justify-content: flex-start; cursor: pointer; transition: 0.3s;
+      height: 80px; /* Fixed height to keep names level */
+    }
 
-    /* Fullscreen Overlay Settings */
+    .bookmark-item:hover { transform: translateY(-5px); }
+    
+    .bookmark-item span { 
+      font-size: 0.6rem; margin-top: 10px; color: white; 
+      opacity: 0.7; letter-spacing: 1px; font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .svg-icon { width: 28px; height: 28px; }
+    .emoji-icon { font-size: 28px; line-height: 1; }
+
+    /* Settings Overlay */
     #settings-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
       display: none; justify-content: center; align-items: center; z-index: 100;
     }
     .settings-content {
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-      padding: 40px; border-radius: 40px; width: 85%; max-width: 500px; color: white;
+      background: rgba(255,255,255,0.05); padding: 40px; border-radius: 35px; 
+      width: 400px; color: white; border: 1px solid rgba(255,255,255,0.1);
     }
-    .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .settings-section { text-align: left; margin-bottom: 25px; }
-    .settings-section h3 { font-size: 0.8rem; color: var(--accent); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 2px; }
-    
+    .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
     .option { 
-      background: rgba(255,255,255,0.05); padding: 15px 20px; border-radius: 15px; 
-      margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
-      cursor: pointer; transition: 0.2s; border: 1px solid transparent;
+      background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 12px; 
+      margin-bottom: 10px; display: flex; justify-content: space-between; cursor: pointer;
     }
-    .option:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.1); }
-    .option span:last-child { font-size: 0.8rem; opacity: 0.6; font-weight: 600; }
+    .option span:last-child { font-size: 0.7rem; opacity: 0.6; font-weight: 800; color: var(--accent); }
   </style>
 </head>
 <body>
 
-  <!-- Settings Menu -->
   <div id="settings-overlay">
     <div class="settings-content">
       <div class="settings-header">
-        <h2 style="margin:0; font-weight:300; letter-spacing:2px;">System Settings</h2>
-        <span onclick="toggleSettings()" style="cursor:pointer; font-size:2rem; opacity:0.5;">&times;</span>
+        <h2 style="margin:0; font-weight:300;">Settings</h2>
+        <span onclick="toggleSettings()" style="cursor:pointer; font-size:1.5rem;">&times;</span>
       </div>
-      
-      <div class="settings-section">
-        <h3>Privacy & Cloaking</h3>
-        <div class="option" onclick="cloakTab()"><span>Tab Cloak</span><span id="cloak-status">OFF</span></div>
-        <div class="option" onclick="alert('Panic key is permanently set to Escape.')"><span>Panic Key</span><span>ESC</span></div>
-      </div>
-
-      <div class="settings-section">
-        <h3>UI Themes</h3>
-        <div class="option" onclick="setTheme('sunset')"><span>Mars Sunset (Default)</span><span>Select</span></div>
-        <div class="option" onclick="setTheme('midnight')"><span>Midnight Void</span><span>Select</span></div>
-        <div class="option" onclick="setTheme('forest')"><span>Emerald Forest</span><span>Select</span></div>
-        <div class="option" onclick="setTheme('ocean')"><span>Deep Ocean</span><span>Select</span></div>
-      </div>
-
-      <div class="settings-section">
-        <h3>System</h3>
-        <div class="option" onclick="location.reload()"><span>Restart Mars</span><span>Reload</span></div>
-        <div class="option" onclick="alert('Mars OS v2.5 Clean Build')"><span>Version Info</span><span>v2.5</span></div>
-      </div>
+      <div class="option" onclick="toggleCloak()"><span>Tab Cloak</span><span id="cloak-status">OFF</span></div>
+      <div class="option"><span>Panic Key</span><span>` (BACKTICK)</span></div>
+      <div style="margin-top:20px; font-size:0.7rem; opacity:0.4; letter-spacing:1px;">THEMES</div>
+      <div class="option" onclick="setTheme('sunset')"><span>Sunset</span><span>SELECT</span></div>
+      <div class="option" onclick="setTheme('midnight')"><span>Midnight</span><span>SELECT</span></div>
     </div>
   </div>
 
@@ -133,7 +128,11 @@
   <div class="container">
     <div class="glass-panel">
       <h1>MARS</h1>
-      <form id="uv-form"><input id="uv-address" type="text" placeholder="Where to next..." autocomplete="off"></form>
+      <div class="form-container">
+        <form id="uv-form" style="width:100%;">
+          <input id="uv-address" type="text" placeholder="Where to next..." autocomplete="off">
+        </form>
+      </div>
       <div class="bookmarks">
         <div class="bookmark-item" onclick="proxy('https://gn-math.dev')"><div class="emoji-icon">🎮</div><span>GAMES</span></div>
         <div class="bookmark-item" onclick="proxy('https://dorawatch.org')"><div class="emoji-icon">🎬</div><span>MOVIES</span></div>
@@ -153,39 +152,29 @@
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
-  // 1. Theme Logic
-  function setTheme(theme) {
-    const root = document.documentElement;
-    if (theme === 'sunset') {
-      root.style.setProperty('--bg', 'linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500)');
-      root.style.setProperty('--accent', '#ff8c00');
-    } else if (theme === 'midnight') {
-      root.style.setProperty('--bg', 'linear-gradient(-45deg, #000000, #0f0c29, #302b63, #24243e)');
-      root.style.setProperty('--accent', '#00d2ff');
-    } else if (theme === 'forest') {
-      root.style.setProperty('--bg', 'linear-gradient(-45deg, #0a2e0a, #114b11, #1a6d1a, #2ebf2e)');
-      root.style.setProperty('--accent', '#39ff14');
-    } else if (theme === 'ocean') {
-      root.style.setProperty('--bg', 'linear-gradient(-45deg, #021927, #045c91, #0ad1c8, #07eb9a)');
-      root.style.setProperty('--accent', '#00fff2');
-    }
-  }
+  let isCloaked = false;
+  const originalTitle = document.title;
+  const originalFavicon = "https://icons8.com";
 
-  // 2. Cloak Logic
-  function cloakTab() {
-    document.title = "My Drive - Google Drive";
+  function toggleCloak() {
+    isCloaked = !isCloaked;
+    const status = document.getElementById('cloak-status');
     const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-    link.type = 'image/x-icon'; link.rel = 'shortcut icon';
-    link.href = 'https://gstatic.com';
-    document.getElementsByTagName('head')[0].appendChild(link);
-    document.getElementById('cloak-status').innerText = "ON";
-    alert('Tab Cloaked as Google Drive!');
+    
+    if (isCloaked) {
+      document.title = "Google Drive";
+      link.href = "https://gstatic.com";
+      status.innerText = "ON";
+    } else {
+      document.title = originalTitle;
+      link.href = originalFavicon;
+      status.innerText = "OFF";
+    }
+    document.head.appendChild(link);
   }
 
-  // 3. System Logic
   function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
   }
   setInterval(updateClock, 1000); updateClock();
 
@@ -194,21 +183,26 @@
     s.style.display = (s.style.display === 'flex') ? 'none' : 'flex';
   }
 
-  const form = document.getElementById('uv-form');
-  const input = document.getElementById('uv-address');
-
   async function proxy(url) {
     if (typeof __uv$config === 'undefined') return;
     window.navigator.serviceWorker.register('/uv/sw.js', { scope: __uv$config.prefix }).then(() => {
-      if (!isUrl(url)) url = 'https://google.com' + encodeURIComponent(url);
-      else if (!(url.startsWith('https://') || url.startsWith('http://'))) url = 'http://' + url;
+      if (!url.includes('.')) url = 'https://google.com' + encodeURIComponent(url);
+      else if (!/^https?:\/\//.test(url)) url = 'http://' + url;
       window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
     });
   }
 
-  form.addEventListener('submit', e => { e.preventDefault(); proxy(input.value.trim()); });
-  function isUrl(val = '') { return /^http(s?):\/\//.test(val) || val.includes('.') && val.substr(0, 1) !== ' '; }
-  document.addEventListener('keydown', (e) => { if (e.key === "Escape") window.location.href = "https://google.com"; });
+  document.getElementById('uv-form').onsubmit = e => { e.preventDefault(); proxy(document.getElementById('uv-address').value.trim()); };
+  
+  // NEW PANIC KEY: ` (Backtick)
+  document.addEventListener('keydown', e => { if (e.key === "`") window.location.href = "https://google.com"; });
+
+  function setTheme(t) {
+    const r = document.documentElement;
+    if(t==='sunset') r.style.setProperty('--bg', 'linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500)');
+    else r.style.setProperty('--bg', 'linear-gradient(-45deg, #000, #0f0c29, #302b63, #24243e)');
+    toggleSettings();
+  }
 </script>
 </body>
 </html>
