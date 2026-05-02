@@ -2,96 +2,86 @@
 <html>
 <head>
   <title>Mars</title>
-  <!-- Default Icon -->
-  <link id="favicon" rel="icon" type="image/jpeg" href="mars-planet-realistic-illustration-vector.jpg">
-
+  <!-- Direct Mars Icon Link -->
+  <link id="favicon" rel="icon" type="image/png" href="https://freepnglogos.com">
+  
   <style>
-  @import url('https://googleapis.com');
+    @import url('https://googleapis.com');
 
-  body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: 'Inter', sans-serif;
-    /* Updated Sunset Gradient */
-    background: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500);
-    background-size: 400% 400%;
-    animation: gradientMove 15s ease infinite;
-  }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      /* Moving Sunset Gradient */
+      background: linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500);
+      background-size: 400% 400%;
+      animation: sunset-move 12s ease infinite;
+    }
 
-  @keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+    @keyframes sunset-move {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    color: white;
-    z-index: 2;
-    position: relative;
-  }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: white;
+    }
 
-  .glass-panel {
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 50px 40px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    text-align: center;
-    width: 90%;
-    max-width: 550px;
-  }
+    .glass-panel {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 50px 40px;
+      width: 90%;
+      max-width: 550px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
 
-  h1 {
-    font-size: 2.8rem;
-    margin-bottom: 30px;
-    letter-spacing: 8px;
-    font-weight: 300;
-    color: #fff;
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-  }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      letter-spacing: 8px;
+      font-weight: 300;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
 
-  input {
-    width: 100%;
-    padding: 18px 25px;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 1.1rem;
-    outline: none;
-    transition: all 0.3s;
-    box-sizing: border-box;
-    text-align: center;
-  }
+    input {
+      width: 100%;
+      padding: 18px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1.1rem;
+      outline: none;
+      box-sizing: border-box;
+      text-align: center;
+      transition: 0.3s;
+    }
 
-  input:focus {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid #ffa500;
-    box-shadow: 0 0 20px rgba(255, 165, 0, 0.3);
-  }
+    input:focus {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid #ffa500;
+    }
 
-  input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  .shortcuts {
-    position: absolute;
-    bottom: 20px;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
-    letter-spacing: 1px;
-  }
-</style>
+    .panic-hint {
+      margin-top: 20px;
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+  </style>
 </head>
 <body>
 
@@ -99,11 +89,10 @@
     <div class="glass-panel">
       <h1>MARS</h1>
       <form id="uv-form">
-        <input id="uv-address" type="text" placeholder="Explore the universe..." autocomplete="off">
+        <input id="uv-address" type="text" placeholder="Enter URL or Search Query" autocomplete="off">
       </form>
-      <div class="footer-text">Secure Gateway Active</div>
+      <div class="panic-hint">Press ESC to quickly hide this page</div>
     </div>
-    <div class="shortcuts">Press <b>ESC</b> to Panic (Open Google)</div>
   </div>
 
 <script src="/uv/uv.bundle.js"></script>
@@ -112,36 +101,19 @@
   const form = document.getElementById('uv-form');
   const input = document.getElementById('uv-address');
 
-  // 1. PANIC BUTTON: Pressing Escape redirects you immediately
+  // Panic Switch
   document.addEventListener('keydown', (e) => {
-    if (e.key === "Escape") window.location.href = "https://classroom.google.com";
+    if (e.key === "Escape") window.location.href = "https://google.com";
   });
-
-  // 2. TAB CLOAKING: Changes tab name and icon automatically
-  function cloak() {
-    document.title = "Google Drive";
-    document.getElementById('favicon').href = "https://gstatic.com";
-  }
-  // Uncomment the line below to turn on Cloaking by default!
-  // cloak();
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    
-    // Register Service Worker
     window.navigator.serviceWorker.register('/uv/sw.js', {
       scope: __uv$config.prefix
     }).then(() => {
       let url = input.value.trim();
-      
-      // 3. IMPROVED SEARCH LOGIC
-      if (!isUrl(url)) {
-        // If not a URL, search on Google
-        url = 'https://google.com' + encodeURIComponent(url);
-      } else if (!(url.startsWith('https://') || url.startsWith('http://'))) {
-        // Add protocol if missing
-        url = 'http://' + url;
-      }
+      if (!isUrl(url)) url = 'https://google.com/search?q=' + encodeURIComponent(url);
+      else if (!(url.startsWith('https://') || url.startsWith('http://'))) url = 'http://' + url;
 
       window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
     });
