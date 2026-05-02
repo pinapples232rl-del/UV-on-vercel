@@ -30,15 +30,23 @@
       display: flex; justify-content: space-between; align-items: center; z-index: 10;
     }
 
+    /* Fixed Bottom Left Home Button */
+    .home-anchor {
+      position: fixed; bottom: 25px; left: 25px; z-index: 20;
+    }
+
     #clock {
       font-size: 0.9rem; color: white; background: rgba(0,0,0,0.3); 
       padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(10px);
     }
 
-    .settings-btn {
-      cursor: pointer; background: rgba(0,0,0,0.3); padding: 10px; 
+    .icon-btn {
+      cursor: pointer; background: rgba(0,0,0,0.3); padding: 12px; 
       border-radius: 50px; backdrop-filter: blur(10px); transition: 0.3s;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.1); outline: none;
     }
+    .icon-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.1); }
 
     .container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
     
@@ -65,7 +73,6 @@
     .svg-icon { width: 28px; height: 28px; }
     .emoji-icon { font-size: 28px; line-height: 1; }
 
-    /* Advanced Settings Menu */
     #settings-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
@@ -75,10 +82,8 @@
       background: rgba(255,255,255,0.05); padding: 40px; border-radius: 35px; 
       width: 450px; max-height: 80vh; overflow-y: auto; color: white; border: 1px solid rgba(255,255,255,0.1);
     }
-    .settings-content::-webkit-scrollbar { width: 5px; }
-    .settings-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
-    .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: sticky; top: 0; background: transparent; }
+    .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
     
     .section-label { font-size: 0.7rem; opacity: 0.4; letter-spacing: 2px; margin: 25px 0 10px 0; font-weight: 800; color: var(--accent); }
     
@@ -92,6 +97,7 @@
 </head>
 <body>
 
+  <!-- Settings Overlay -->
   <div id="settings-overlay">
     <div class="settings-content">
       <div class="settings-header">
@@ -100,10 +106,10 @@
       </div>
 
       <div class="section-label">CLOAK GALLERY</div>
-      <div class="option" onclick="setCloak('none')"><span>Default (Mars)</span><span>ACTIVE</span></div>
-      <div class="option" onclick="setCloak('drive')"><span>Google Drive</span><span>SELECT</span></div>
-      <div class="option" onclick="setCloak('classroom')"><span>Classroom</span><span>SELECT</span></div>
-      <div class="option" onclick="setCloak('gmail')"><span>Gmail</span><span>SELECT</span></div>
+      <div class="option cloak-opt" data-type="none" onclick="setCloak('none')"><span>Default (Mars)</span><span>ACTIVE</span></div>
+      <div class="option cloak-opt" data-type="drive" onclick="setCloak('drive')"><span>Google Drive</span><span>SELECT</span></div>
+      <div class="option cloak-opt" data-type="classroom" onclick="setCloak('classroom')"><span>Classroom</span><span>SELECT</span></div>
+      <div class="option cloak-opt" data-type="gmail" onclick="setCloak('gmail')"><span>Gmail</span><span>SELECT</span></div>
 
       <div class="section-label">THEME ENGINE</div>
       <div class="option" onclick="setTheme('sunset')"><span>Mars Sunset</span><span>SELECT</span></div>
@@ -112,20 +118,27 @@
       <div class="option" onclick="setTheme('glacier')"><span>Arctic Glacier</span><span>SELECT</span></div>
 
       <div class="section-label">PRIVACY</div>
-      <div class="option" onclick="toggleAntiClose()"><span>Anti-Close Mode</span><span id="ac-status">OFF</span></div>
       <div class="option"><span>Panic Key</span><span>` (BACKTICK)</span></div>
-
-      <div class="section-label">MORE</div>
       <div class="option" onclick="alert('Credits: Built for Mars OS\nEngine: Ultraviolet')"><span>Credits</span><span>VIEW</span></div>
-      <div class="option" onclick="window.location.href='https://github.com'"><span>Source Code</span><span>GITHUB</span></div>
     </div>
   </div>
 
+  <!-- UI Navigation -->
   <div class="top-bar">
     <div id="clock">00:00:00</div>
-    <div class="settings-btn" onclick="toggleSettings()">⚙️</div>
+    <div class="icon-btn" onclick="toggleSettings()">⚙️</div>
   </div>
 
+  <div class="home-anchor">
+    <div class="icon-btn" onclick="location.reload()">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Main UI -->
   <div class="container">
     <div class="glass-panel">
       <h1>MARS</h1>
@@ -151,9 +164,8 @@
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
-  // 1. CLOAK LOGIC
   const cloaks = {
-    none: { t: "Mars", i: "https://icons8.com" },
+    none: { t: "Mars", i: "https://google.com" },
     drive: { t: "My Drive - Google Drive", i: "https://gstatic.com" },
     classroom: { t: "Classes", i: "https://gstatic.com" },
     gmail: { t: "Gmail", i: "https://gstatic.com" }
@@ -162,54 +174,70 @@
   function setCloak(type) {
     const cloak = cloaks[type];
     document.title = cloak.t;
-    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-    link.type = 'image/x-icon'; link.rel = 'shortcut icon'; link.href = cloak.i;
-    document.head.appendChild(link);
+    
+    document.querySelectorAll('.cloak-opt').forEach(opt => {
+      opt.querySelector('span:last-child').innerText = "SELECT";
+      opt.style.color = "white";
+    });
+    
+    const selected = document.querySelector(`.cloak-opt[data-type="${type}"]`);
+    if(selected) {
+      selected.querySelector('span:last-child').innerText = "ACTIVE";
+      selected.style.color = "var(--accent)";
+    }
+
+    localStorage.setItem('mars-cloak', type);
   }
 
-  // 2. ANTI-CLOSE (Prevents accidental tab closing)
-  let antiCloseActive = false;
-  function toggleAntiClose() {
-    antiCloseActive = !antiCloseActive;
-    document.getElementById('ac-status').innerText = antiCloseActive ? "ON" : "OFF";
-    window.onbeforeunload = antiCloseActive ? function() { return "Are you sure?"; } : null;
-  }
-
-  // 3. THEMES
-  function setTheme(t) {
-    const r = document.documentElement;
-    const themes = {
-      sunset: ['linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500)', '#ff8c00'],
-      midnight: ['linear-gradient(-45deg, #000, #0f0c29, #302b63, #24243e)', '#00d2ff'],
-      nebula: ['linear-gradient(-45deg, #200122, #6f0000, #200122)', '#ff00ff'],
-      glacier: ['linear-gradient(-45deg, #1e3c72, #2a5298, #6dd5ed)', '#ffffff']
+  function setTheme(theme) {
+    const bodies = {
+      sunset: 'linear-gradient(-45deg, #2e0249, #570a57, #a91079, #ff6b6b, #ffa500)',
+      midnight: 'linear-gradient(-45deg, #000000, #1a1a2e, #16213e, #0f3460)',
+      nebula: 'linear-gradient(-45deg, #020111, #3a1c71, #d76d77, #ffaf7b)',
+      glacier: 'linear-gradient(-45deg, #203a43, #2c5364, #0f2027)'
     };
-    r.style.setProperty('--bg', themes[t][0]);
-    r.style.setProperty('--accent', themes[t][1]);
+    document.body.style.background = bodies[theme];
+    localStorage.setItem('mars-theme', theme);
   }
-
-  // 4. CORE ENGINE
-  function updateClock() {
-    document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-  }
-  setInterval(updateClock, 1000); updateClock();
 
   function toggleSettings() {
-    const s = document.getElementById('settings-overlay');
-    s.style.display = (s.style.display === 'flex') ? 'none' : 'flex';
+    const overlay = document.getElementById('settings-overlay');
+    overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
   }
 
-  async function proxy(url) {
-    if (typeof __uv$config === 'undefined') return;
-    window.navigator.serviceWorker.register('/uv/sw.js', { scope: __uv$config.prefix }).then(() => {
-      if (!url.includes('.')) url = 'https://google.com' + encodeURIComponent(url);
-      else if (!/^https?:\/\//.test(url)) url = 'http://' + url;
-      window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
-    });
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').innerText = now.toLocaleTimeString();
+  }
+  setInterval(updateClock, 1000);
+
+  window.onload = () => {
+    const savedCloak = localStorage.getItem('mars-cloak') || 'none';
+    const savedTheme = localStorage.getItem('mars-theme') || 'sunset';
+    setCloak(savedCloak);
+    setTheme(savedTheme);
+    updateClock();
+  };
+
+  const form = document.getElementById('uv-form');
+  const address = document.getElementById('uv-address');
+  form?.addEventListener('submit', e => {
+    e.preventDefault();
+    proxy(address.value);
+  });
+
+  function proxy(url) {
+    if (!url.includes('.') || url.includes(' ')) {
+      url = 'https://google.com' + encodeURIComponent(url);
+    } else if (!(url.startsWith('https://') || url.startsWith('http://'))) {
+      url = 'https://' + url;
+    }
+    window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
   }
 
-  document.getElementById('uv-form').onsubmit = e => { e.preventDefault(); proxy(document.getElementById('uv-address').value.trim()); };
-  document.addEventListener('keydown', e => { if (e.key === "`") window.location.href = "https://google.com"; });
+  window.addEventListener('keydown', e => {
+    if (e.key === '`') window.location.href = 'https://google.com';
+  });
 </script>
 </body>
 </html>
